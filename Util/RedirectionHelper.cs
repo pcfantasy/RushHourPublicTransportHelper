@@ -26,7 +26,7 @@ using System;
 using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace BPTB
+namespace RushHourPublicTransportHelper.Util
 {
     /// <summary>
     /// Helper class to deal with detours. This version is for Unity 5 x64 on Windows.
@@ -63,14 +63,37 @@ namespace BPTB
             // GetFunctionPointer enforces compilation of the method.
             var fptr1 = from.MethodHandle.GetFunctionPointer();
             var fptr2 = to.MethodHandle.GetFunctionPointer();
-            DebugLog.Log("Patching from " + fptr1 + " to " + fptr2);
             return PatchJumpTo(fptr1, fptr2);
         }
 
         public static void RevertRedirect(MethodInfo from, RedirectCallsState state)
         {
             var fptr1 = from.MethodHandle.GetFunctionPointer();
+            DebugLog.LogToFileOnly("Revert Patching from " + fptr1 + " to " + state);
             RevertJumpTo(fptr1, state);
+        }
+
+
+        private static bool IsRedirected(IntPtr site, IntPtr target)
+        {
+            unsafe
+            {
+                byte* sitePtr = (byte*)site.ToPointer();
+                return *sitePtr == 0x49 &&
+                    *(sitePtr + 1) == 0xBB &&
+                    *((ulong*)(sitePtr + 2)) == (ulong)target.ToInt64() &&
+                    *(sitePtr + 10) == 0x41 &&
+                    *(sitePtr + 11) == 0xFF &&
+                    *(sitePtr + 12) == 0xE3;
+            }
+        }
+
+
+        public static bool IsRedirected(MethodInfo from, MethodInfo to)
+        {
+            var fptr1 = from.MethodHandle.GetFunctionPointer();
+            var fptr2 = to.MethodHandle.GetFunctionPointer();
+            return IsRedirected(fptr1, fptr2);
         }
 
         /// <summary>

@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29424.173
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BPTB", "BPTB\BPTB.csproj", "{3C8BBFC0-DB90-4524-9476-6472566AF15E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RushHourPublicTransportHelper", "RushHourPublicTransportHelper.csproj", "{3C8BBFC0-DB90-4524-9476-6472566AF15E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +18,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FDE0C2E7-2773-4125-8C09-0039DBA3B8F6}
 	EndGlobalSection
 EndGlobal

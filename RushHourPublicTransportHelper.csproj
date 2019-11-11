@@ -7,8 +7,8 @@
     <ProjectGuid>{3C8BBFC0-DB90-4524-9476-6472566AF15E}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>BPTB</RootNamespace>
-    <AssemblyName>BPTB</AssemblyName>
+    <RootNamespace>RushHourPublicTransportHelper</RootNamespace>
+    <AssemblyName>RushHourPublicTransportHelper</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -57,16 +57,20 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="UI_slide.cs" />
-    <Compile Include="pcfantasy_EM.cs" />
-    <Compile Include="DebugLog.cs" />
-    <Compile Include="better_public_transport_budget.cs" />
-    <Compile Include="loader.cs" />
+    <Compile Include="Threading.cs" />
+    <Compile Include="UI\PBLUI.cs" />
+    <Compile Include="Util\DebugLog.cs" />
+    <Compile Include="RushHourPublicTransportHelper.cs" />
+    <Compile Include="Loader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RedirectionHelper.cs" />
-    <Compile Include="UI_main.cs" />
+    <Compile Include="Util\RedirectionHelper.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>rd /q /s "C:\Users\Administrator\AppData\Local\Colossal Order\Cities_Skylines\Addons\Mods\RushHourPublicTransportHelper"
+mkdir "C:\Users\Administrator\AppData\Local\Colossal Order\Cities_Skylines\Addons\Mods\RushHourPublicTransportHelper"
+copy "D:\Mod\RushHourPublicTransportHelper\bin\Release\RushHourPublicTransportHelper.dll"  "C:\Users\Administrator\AppData\Local\Colossal Order\Cities_Skylines\Addons\Mods\RushHourPublicTransportHelper\RushHourPublicTransportHelper.dll"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
