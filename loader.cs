@@ -81,10 +81,10 @@ namespace RushHourPublicTransportHelper
                 DebugLog.LogToFileOnly("UIPanel not found (update broke the mod!): (Library) PublicTransportWorldInfoPanel\nAvailable panels are:\n");
             }
             PBLUI.transform.parent = PBLInfo.transform;
-            PBLUI.size = new Vector3(100, 100);
+            PBLUI.size = new Vector3(150, 100);
             PBLUI.baseBuildingWindow = PBLInfo.gameObject.transform.GetComponentInChildren<PublicTransportWorldInfoPanel>();
             UILabel UILabel = PBLUI.baseBuildingWindow.Find<UILabel>("ModelLabel");
-            PBLUI.relativePosition = new Vector3(UILabel.relativePosition.x, UILabel.relativePosition.y + 50f);
+            PBLUI.position = new Vector3(UILabel.relativePosition.x, PBLInfo.size.y - (UILabel.relativePosition.y + 130f));
             PBLInfo.eventVisibilityChanged += PBLInfo_eventVisibilityChanged;
         }
         public static void PBLInfo_eventVisibilityChanged(UIComponent component, bool value)
@@ -94,10 +94,11 @@ namespace RushHourPublicTransportHelper
             {
                 //initialize PBL ui again
                 PBLUI.transform.parent = PBLInfo.transform;
-                PBLUI.size = new Vector3(250, 100);
+                PBLUI.size = new Vector3(150, 100);
                 PBLUI.baseBuildingWindow = PBLInfo.gameObject.transform.GetComponentInChildren<PublicTransportWorldInfoPanel>();
                 UILabel UILabel = PBLUI.baseBuildingWindow.Find<UILabel>("ModelLabel");
-                PBLUI.relativePosition = new Vector3(UILabel.relativePosition.x, UILabel.relativePosition.y + 50f);
+                //DebugLog.LogToFileOnly(UILabel.relativePosition.x.ToString() + "    " +  UILabel.relativePosition.y.ToString());
+                PBLUI.position = new Vector3(UILabel.relativePosition.x, PBLInfo.size.y - (UILabel.relativePosition.y + 130f));
                 PBLUI.refeshOnce = true;
                 PBLUI.Show();
             }
