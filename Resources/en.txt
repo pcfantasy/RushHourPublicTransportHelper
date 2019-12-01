@@ -1,0 +1,11 @@
+﻿WeekDayPlan	WeekDayPlan
+WeekEndPlan	WeekEndPlan
+MorningRushHour	Morning Rush Hour(8-10)
+EveningRushHour	Evening Rush Hour(17-19)
+DeepNight	Deep night(0-4)
+OtherTime	Other Time
+NoPlan	NoPlan
+MorningBudget	Morning Budget
+EveningBudget	Evening Budget
+DeepNightBudget	Deep night Budget
+OtherTimeBudget	Other Time Budget

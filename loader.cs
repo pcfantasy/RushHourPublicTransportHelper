@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using ColossalFramework;
 using ColossalFramework.UI;
 using ICities;
+using RushHourPublicTransportHelper.CustomData;
 using RushHourPublicTransportHelper.UI;
 using RushHourPublicTransportHelper.Util;
 using UnityEngine;
@@ -41,8 +42,8 @@ namespace RushHourPublicTransportHelper
 
         public override void OnCreated(ILoading loading)
         {
+            Detours = new List<Detour>();
             base.OnCreated(loading);
-
         }
 
         public override void OnLevelLoaded(LoadMode mode)
@@ -53,7 +54,10 @@ namespace RushHourPublicTransportHelper
             {
                 if (mode == LoadMode.LoadGame || mode == LoadMode.NewGame)
                 {
+                    InitDetour();
+                    Threading.isFirstTime = true;
                     Loader.SetupGui();
+                    OptionUI.LoadSetting();
                 }
             }
         }
@@ -71,6 +75,38 @@ namespace RushHourPublicTransportHelper
             base.OnReleased();
         }
 
+        public void InitDetour()
+        {
+            if (!DetourInited)
+            {
+                DebugLog.LogToFileOnly("Init detours");
+                bool detourFailed = false;
+
+                //1
+                DebugLog.LogToFileOnly("Detour TransportLine::CalculateTargetVehicleCount calls");
+                try
+                {
+                    Detours.Add(new Detour(typeof(TransportLine).GetMethod("CalculateTargetVehicleCount", BindingFlags.Public | BindingFlags.Instance),
+                                           typeof(CustomTransportLine).GetMethod("CalculateTargetVehicleCount", BindingFlags.Public | BindingFlags.Static)));
+                }
+                catch (Exception)
+                {
+                    DebugLog.LogToFileOnly("Could not detour TransportLine::CalculateTargetVehicleCount");
+                    detourFailed = true;
+                }
+
+                if (detourFailed)
+                {
+                    DebugLog.LogToFileOnly("Detours failed");
+                }
+                else
+                {
+                    DebugLog.LogToFileOnly("Detours successful");
+                }
+                DetourInited = true;
+            }
+        }
+
         public static void SetupPBLUIGui()
         {
             PBLWindowGameObject = new GameObject("PBLWindowGameObject");
@@ -84,7 +120,7 @@ namespace RushHourPublicTransportHelper
             PBLUI.size = new Vector3(150, 100);
             PBLUI.baseBuildingWindow = PBLInfo.gameObject.transform.GetComponentInChildren<PublicTransportWorldInfoPanel>();
             UILabel UILabel = PBLUI.baseBuildingWindow.Find<UILabel>("ModelLabel");
-            PBLUI.position = new Vector3(UILabel.relativePosition.x, PBLInfo.size.y - (UILabel.relativePosition.y + 130f));
+            PBLUI.position = new Vector3(UILabel.relativePosition.x, PBLInfo.size.y - (UILabel.relativePosition.y + 160f));
             PBLInfo.eventVisibilityChanged += PBLInfo_eventVisibilityChanged;
         }
         public static void PBLInfo_eventVisibilityChanged(UIComponent component, bool value)
@@ -98,7 +134,7 @@ namespace RushHourPublicTransportHelper
                 PBLUI.baseBuildingWindow = PBLInfo.gameObject.transform.GetComponentInChildren<PublicTransportWorldInfoPanel>();
                 UILabel UILabel = PBLUI.baseBuildingWindow.Find<UILabel>("ModelLabel");
                 //DebugLog.LogToFileOnly(UILabel.relativePosition.x.ToString() + "    " +  UILabel.relativePosition.y.ToString());
-                PBLUI.position = new Vector3(UILabel.relativePosition.x, PBLInfo.size.y - (UILabel.relativePosition.y + 130f));
+                PBLUI.position = new Vector3(UILabel.relativePosition.x, PBLInfo.size.y - (UILabel.relativePosition.y + 160f));
                 PBLUI.refeshOnce = true;
                 PBLUI.Show();
             }

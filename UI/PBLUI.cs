@@ -4,21 +4,22 @@ using ColossalFramework;
 using System;
 using ICities;
 using ColossalFramework.Plugins;
+using RushHourPublicTransportHelper.Util;
 
 namespace RushHourPublicTransportHelper.UI
 {
     public class PBLUI : UIPanel
     {
         public static readonly string cacheName = "PBLUI";
-        private static readonly float SPACING = 15f;
         public PublicTransportWorldInfoPanel baseBuildingWindow;
         public static bool refeshOnce = false;
         public static bool _initialized = false;
         public static int aTraffic = 0;
         public static int bTraffic = 0;
-        public static int cTraffic = 0;
-        public static int dTraffic = 0;
-        //private UILabel try1;
+        private UILabel WeekDayPlan;
+        private UILabel WeekEndPlan;
+        private static UIDropDown WeekDayPlanDD;
+        private static UIDropDown WeekEndPlanDD;
 
         public override void Update()
         {
@@ -50,26 +51,35 @@ namespace RushHourPublicTransportHelper.UI
 
         private void ShowOnGui()
         {
-            var uIDropDown = CreateDropDown(this);
-            uIDropDown.items = new string[] { "LOW_TRAFFIC", "MEDIUM_TRAFFIC", "HEAVY_TRAFFIC" };
-            uIDropDown.selectedIndex = bTraffic;
-            uIDropDown.size = new Vector2(130f, 25f);
-            uIDropDown.relativePosition = new Vector3(0f, 0f);
-            uIDropDown.eventSelectedIndexChanged += delegate (UIComponent c, int sel)
+            this.WeekDayPlan = base.AddUIComponent<UILabel>();
+            this.WeekDayPlan.text = Localization.Get("WeekDayPlan") ;
+            this.WeekDayPlan.relativePosition = new Vector3(0, 0f);
+            this.WeekDayPlan.autoSize = true;
+
+            WeekDayPlanDD = CreateDropDown(this);
+            WeekDayPlanDD.items = new string[] { Localization.Get("NoPlan"), Localization.Get("WeekDayPlan"), Localization.Get("WeekEndPlan") };
+            WeekDayPlanDD.selectedIndex = MainDataStore.WeekDayPlan[MainDataStore.lastLineID];
+            WeekDayPlanDD.size = new Vector2(130f, 25f);
+            WeekDayPlanDD.relativePosition = new Vector3(0f, 20f);
+            WeekDayPlanDD.eventSelectedIndexChanged += delegate (UIComponent c, int sel)
             {
-                bTraffic = sel;
+                MainDataStore.WeekDayPlan[MainDataStore.lastLineID] = (byte)sel;
             };
-            var uIDropDown1 = CreateDropDown(this);
-            uIDropDown1.items = new string[] { "LOW_TRAFFIC", "MEDIUM_TRAFFIC", "HEAVY_TRAFFIC" };
-            uIDropDown1.selectedIndex = bTraffic;
-            uIDropDown1.eventSelectedIndexChanged += delegate (UIComponent c, int sel)
+
+            this.WeekEndPlan = base.AddUIComponent<UILabel>();
+            this.WeekEndPlan.text = Localization.Get("WeekEndPlan");
+            this.WeekEndPlan.relativePosition = new Vector3(0, 50f);
+            this.WeekEndPlan.autoSize = true;
+
+            WeekEndPlanDD = CreateDropDown(this);
+            WeekEndPlanDD.items = new string[] { Localization.Get("NoPlan"), Localization.Get("WeekDayPlan"), Localization.Get("WeekEndPlan") };
+            WeekEndPlanDD.selectedIndex = MainDataStore.WeekEndPlan[MainDataStore.lastLineID];
+            WeekEndPlanDD.eventSelectedIndexChanged += delegate (UIComponent c, int sel)
             {
-                bTraffic = sel;
+                MainDataStore.WeekEndPlan[MainDataStore.lastLineID] = (byte)sel;
             };
-            uIDropDown1.size = new Vector2(130f, 25f);
-            uIDropDown1.relativePosition = new Vector3(0f, 30f);
-            //helper.AddDropdown("SIDEB_TRAFFIC", new string[] { "LOW_TRAFFIC", "MEDIUM_TRAFFIC", "HEAVY_TRAFFIC" }, bTraffic, (index1) => GetEffortIdex1(index1));
-            //helper.AddDropdown("SIDEB_TRAFFIC", new string[] { "LOW_TRAFFIC", "MEDIUM_TRAFFIC", "HEAVY_TRAFFIC" }, bTraffic, (index1) => GetEffortIdex1(index1));
+            WeekEndPlanDD.size = new Vector2(130f, 25f);
+            WeekEndPlanDD.relativePosition = new Vector3(0f, 70f);
         }
 
         public UITextureAtlas GetAtlas(string name)
@@ -141,9 +151,35 @@ namespace RushHourPublicTransportHelper.UI
             uint currentFrameIndex = Singleton<SimulationManager>.instance.m_currentFrameIndex;
             uint num2 = currentFrameIndex & 255u;
 
-            if (refeshOnce)
+            if (refeshOnce || (MainDataStore.lastLineID != GetLineID()))
             {
+                if (isVisible)
+                {
+                    MainDataStore.lastLineID = GetLineID();
+                    this.WeekDayPlan.text = Localization.Get("WeekDayPlan");
+                    this.WeekEndPlan.text = Localization.Get("WeekEndPlan");
+                    WeekDayPlanDD.selectedIndex = MainDataStore.WeekDayPlan[MainDataStore.lastLineID];
+                    WeekEndPlanDD.selectedIndex = MainDataStore.WeekEndPlan[MainDataStore.lastLineID];
+                    refeshOnce = false;
+                }
             }
+        }
+
+        private ushort GetLineID()
+        {
+            if (WorldInfoPanel.GetCurrentInstanceID().Type == InstanceType.TransportLine)
+            {
+                return WorldInfoPanel.GetCurrentInstanceID().TransportLine;
+            }
+            if (WorldInfoPanel.GetCurrentInstanceID().Type == InstanceType.Vehicle)
+            {
+                ushort firstVehicle = Singleton<VehicleManager>.instance.m_vehicles.m_buffer[WorldInfoPanel.GetCurrentInstanceID().Vehicle].GetFirstVehicle(WorldInfoPanel.GetCurrentInstanceID().Vehicle);
+                if (firstVehicle != 0)
+                {
+                    return Singleton<VehicleManager>.instance.m_vehicles.m_buffer[firstVehicle].m_transportLine;
+                }
+            }
+            return 0;
         }
     }
 }

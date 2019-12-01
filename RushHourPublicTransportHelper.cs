@@ -11,6 +11,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using ColossalFramework.Globalization;
 using System.IO;
+using RushHourPublicTransportHelper.UI;
 
 namespace RushHourPublicTransportHelper
 {
@@ -38,6 +39,11 @@ namespace RushHourPublicTransportHelper
         public void OnDisabled()
         {
             IsEnabled = false;
+        }
+
+        public void OnSettingsUI(UIHelperBase helper)
+        {
+            OptionUI.makeSettings(helper);
         }
     }
 }

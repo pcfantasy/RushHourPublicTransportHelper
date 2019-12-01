@@ -75,7 +75,7 @@ namespace RushHourPublicTransportHelper
                     DebugLog.LogToFileOnly(string.Format("ThreadingExtension.OnBeforeSimulationFrame: First frame detected. Detours checked. Result: {0} missing detours", list.Count));
                     if (list.Count > 0)
                     {
-                        string error = "RealConstruction detected an incompatibility with another mod! You can continue playing but it's NOT recommended. RealConstruction will not work as expected. Send RealConstruction.txt to Author.";
+                        string error = "RushHourPublicTransportHelper detected an incompatibility with another mod! You can continue playing but it's NOT recommended. RushHourPublicTransportHelper will not work as expected. Send RushHourPublicTransportHelper.txt to Author.";
                         DebugLog.LogToFileOnly(error);
                         string text = "The following methods were overriden by another mod:";
                         foreach (string current2 in list)
