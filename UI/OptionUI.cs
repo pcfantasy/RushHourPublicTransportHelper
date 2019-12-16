@@ -188,8 +188,8 @@ namespace RushHourPublicTransportHelper.UI
         {
             eveningBudgetWeekEnd = index;
             SaveSetting();
-            MethodInfo method = typeof(OptionsMainPanel).GetMethod("OnLocaleChanged", BindingFlags.Instance | BindingFlags.NonPublic);
-            method.Invoke(UIView.library.Get<OptionsMainPanel>("OptionsPanel"), new object[0]);
+            //MethodInfo method = typeof(OptionsMainPanel).GetMethod("OnLocaleChanged", BindingFlags.Instance | BindingFlags.NonPublic);
+            //method.Invoke(UIView.library.Get<OptionsMainPanel>("OptionsPanel"), new object[0]);
         }
         public static void GetDeepNightBudgetWeekEnd(int index)
         {
